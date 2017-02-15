@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Movie Review App</title>
+        <style>
+            p, h1 {font-family: helvetica;}
+            p {font-size:1.5em;line-height:1.5em; margin-left: 24px;}
+            pre {font-size: 2em;}
+            
+            div {
+                background-color:lightblue; 
+                border: 1px solid red; 
+                border-radius: 6px;
+                min-height:75px;
+                padding:15px;
+            }
+
+        </style>
+    </head>
+    <body>
+    <h1>Movie Review</h1>
+    
+    <!-- div for instructions and form -->
+    <div id="form">
+        <p>
+
+            <br>
+            Search for a Movie Genre (<a href="https://www.google.com/search?q=List+of+Movie+Genres&oq=List+of+Movie+Genres&aqs=chrome..69i57.4077j0j1&sourceid=chrome&ie=UTF-8">List of Movie Genres</a>)</p>
+        <input id="txtQuery" type="text" placeholder="Enter your search term"></input>
+        <button type="button" id="btnSearch" >Search</button>
+    </div>
+    
+    <!-- a div to store the results -->
+    <div id="results">
+        
+<h3>Based on the Critics Views</h3>
+<img src="http://www.bloodbrotherfilm.com/wp-content/uploads/2013/10/nytimes.jpg" alt="NyT" style="width:304px;height:228px;">
+<br>
+        <p1>This project was made by Alex Woo and Jeffery Huang. NYT Movie Review app is where anybody can search and find up to date data of movie reviews from the New York Times. The goal of this app is to provide guidance and the maximum efficiency for curious moviegoers who may seek to find premier dates and a short summary. </p1>
+        
+        
+    </div>
+    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        var nytData;  
+    
+        $( function() {
+
+
+                var baseUrl = "https://api.nytimes.com/svc/movies/v2/reviews/search.json";
+                 
+                var url = baseUrl + "?api-key=" + "1bd4414d875644a6a5c785f14130659b";
+                
+                //console.log(url);
+             $("#btnSearch").on("click", function(){
+                 var searchTerm=$("#txtQuery").val();
+                 url=url+"&query="+searchTerm
+                 console.log(url)
+                 $.getJSON(url)
+                    .done (function (data) {
+                       console.log(data);
+                       nytData = data;
+                          $.each(data.results, function (index, value) {
+                                //console.log(value.snippet);
+                                $("p1").remove()
+                                $("h3").remove()
+                                $("img").remove()
+                                var html = "<h2>" 
+                                    +(value.display_title)
+                                    +"<br>"
+                                    + '<img src="' + (value.multimedia.src) + '" alt="Movie Image" style="width:304px;height:228px;">'
+                                    +"Rated: "
+                                    +(value.mpaa_rating)
+                                    +"<br>"
+                                    +"Premieres: "
+                                    +(value.opening_date)
+                                    +"<br>"
+                                    +'<a href="'+(value.link.url)+'">Link to Review</a>'
+                                    +"<br>"
+                                    +"Reviewed By: "
+                                    +(value.byline)
+                                    + "<br>"
+                                    +(value.headline)
+                                    +"<br>"
+                                    +(value.summary_short)
+                                    +"<br>"
+                                    +"Published: "
+                                    +(value.publication_date)
+                                    +"<br>"
+                                    +"Updated: "
+                                    +(value.date_updated)
+                                    + "</h2>";
+                                $("#results").append(html);
+                            })
+                        })
+                        .fail (function () {});                    
+                });
+ 
+
+            });
+    </script>
+    </body>
+</html>
