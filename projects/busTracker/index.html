@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery.parseXML demo</title>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <link rel="stylesheet" type="text/css" href="bustracker.css">
+  </head>
+<body>
+<h1>Bus Routes</h1>
+
+<div id=Westbound>
+<div id=Eastbound>
+<div id=Northbound>
+<div id=Southbound>
+
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script>
+      /* global $*/
+      
+        $(function() {
+          
+          
+          var apiPassThruUrl = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+          
+          var apiEndpoint = "http://ctabustracker.com/bustime/api/v2/getpredictions";
+          
+          
+          $.ajax({
+              url: apiPassThruUrl,
+              dataType: "json",
+              method: 'GET',
+              data: {"apiEndpoint": apiEndpoint,
+                      "key" : "ADwS2aVDDcxt7UVyLEAXUc8Hm",
+                      "format":"json",
+                      "rt": "152,49",
+                      "stpid": "12525,12571,8417,8195",
+              }
+            }
+            ).done (function (data) {
+              console.log(data["bustime-response"]["prd"]);
+             
+              $.each(data["bustime-response"]["prd"], function(i,v) {
+                  $("#" + v.rtdir).append("Route #" 
+                  + v.rt 
+                  + "<br>"
+                  + "Stop Id: "
+                  + v.stpid
+                  + "<br>"
+                  + "Stopping at: "
+                  + v.stpnm
+                  + "<br>"
+                  + "Predicted Time: "
+                  + v.prdctdn
+                  + " minutes"
+                  + "<br>"
+                  + "<br>"
+                  + "</h2>"
+                );
+              });
+
+            });
+        });
+            
+  
+</script>
+ 
+</body>
+</html>
