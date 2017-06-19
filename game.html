@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Game</title>
+  <style>
+    #backgroundgame {
+      border: 5px solid black;
+      background-image: url('http://wallpapercave.com/wp/kSQdCxM.jpg');
+      height: "500px";
+      width: "1000px";
+    }
+    
+    #earth {
+      display: none;
+    }
+    
+    #meteor {
+      display: none;
+    }
+    
+    #person {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="backgroundgame" src="http://wallpapercave.com/wp/JzfvVHJ.jpg" width="1000" height="500">
+    
+  </canvas>
+
+  <div id='lives'></div>
+  <div id='record'></div>
+  <div id='level'></div>
+  <img id="earth" src="http://pre03.deviantart.net/7eab/th/pre/i/2010/353/3/a/planet_earth_stock_by_huntere15-d3581df.png" height="50" width="50">
+  <img id="meteor" src="http://image-cdn.dropr.com/image/dropr_pml2XsHQwuQW4a8h7T0iytXaOz6meYCG_r1_920x1840.gif" height="50" width="50">
+  <img id="person" src="https://community.imgur.com/uploads/default/original/3X/4/8/484c50003cb578aeb724292215d5f3c6f49c7a7b.png" height="50" width="50">
+
+  <script>
+    window.onload = function() {
+      var livesRemaining = 5;
+      var record = 0;
+      var level = 1;
+      var paused = false;
+      var player = {
+        x: 0,
+        y: 0,
+        costume: "",
+        speed: 1
+      };
+      var harm = {
+        x: 0,
+        y: 0,
+        costume: "",
+        speed: 1
+      };
+      var benefit = {
+        x: 0,
+        y: 0,
+        costume: "",
+        speed: 1
+      };
+      /*
+      
+			  main animation loop
+			*/
+
+      var c = document.getElementById("backgroundgame");
+      var ctx = c.getContext("2d");
+      var image = document.getElementById("earth");
+      var earthX = 0
+      var earthY = 100
+
+
+
+      var harmer = document.getElementById("meteor");
+      harm.x = 250
+      harm.y = Math.floor(Math.random() * 300)
+
+      var benefiter = document.getElementById("person");
+      benefit.x = 300
+      benefit.y = Math.floor(Math.random() * 300)
+
+      function animate() {
+
+
+        ctx.clearRect(0, 0, c.width, c.height);
+        // update harm and benefit y coordinates
+        harm.x = harm.x - 1;
+        benefit.x = benefit.x - 1;
+        // draw background
+
+        //  draw player
+        ctx.drawImage(image, earthX, earthY, 100, 100);
+        // draw harm 
+        ctx.drawImage(harmer, harm.x, harm.y, 100, 100);
+        // check for and handle edge condition
+        if (harm.x < 0) {
+          harm.x = c.width;
+        }
+        // check for and handle harm collision
+        if (Math.abs(harm.y - earthY) < 128 && earthX === harm.x) {
+          livesRemaining = livesRemaining - 1
+          $('#lives').empty()
+          $('#lives').append('Lives Remaining: ' + livesRemaining)
+        }
+
+        if (livesRemaining <= 0) {
+          $('#lives').empty()
+          $('#record').empty()
+          $('#level').empty()
+          $('#lives').append('GAME OVER!')
+        }
+        // draw benefit
+        ctx.drawImage(benefiter, benefit.x, benefit.y, 100, 100)
+          // check for and handle edge condition
+        if (benefit.x < 0) {
+          benefit.x = c.width;
+        }
+        // check for benefit collision
+        if (Math.abs(benefit.y - earthY) < 128 && earthX === benefit.x) {
+          record = record + 100;
+          $('#record').empty()
+          $('#record').append('Score: ' + record)
+        }
+        // draw text (lives and score)
+
+
+
+        //  if the game has not been paused, 
+        if (!paused) {
+          requestAnimationFrame(animate);
+        }
+        else {
+
+
+
+        }
+
+
+      }
+      animate();
+
+      document.addEventListener("keydown", move)
+
+      function move(e) {
+        //ctx.clearRect(0,0,c.width,c.height);
+
+        if (e.keyCode == 40) {
+          earthY = earthY + 3
+        }
+        if (e.keyCode == 38) {
+          earthY = earthY - 3
+        }
+
+      }
+
+
+
+
+    };
+
+    //  event handler for moving player
+    //    use onKeyPress event, and change the player.y value based on the up/down keys
+  </script>
+
+
+</body>
+
+</html>
